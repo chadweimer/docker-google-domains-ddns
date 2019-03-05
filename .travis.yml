@@ -10,7 +10,7 @@ script:
   - docker build -t cwmr/google-domains-ddns:amd64 .
   # build armhf image
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build --build-arg IMAGE=multiarch/alpine:armhf-v3.8 -t cwmr/google-domains-ddns:arm .
+  - docker build --build-arg IMAGE=multiarch/alpine:armhf-v3.9 -t cwmr/google-domains-ddns:arm .
   # push image
   - wget -O manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64
   - chmod +x ./manifest-tool
