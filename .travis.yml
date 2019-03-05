@@ -20,10 +20,4 @@ script:
       docker push cwmr/google-domains-ddns:amd64
       docker push cwmr/google-domains-ddns:arm
       ./manifest-tool push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:ARCH --target cwmr/google-domains-ddns:latest
-      TAG=$(grep "ENV AWS_CLI_VERSION" Dockerfile | awk 'NF>1{print $NF}')
-      docker tag cwmr/google-domains-ddns:amd64 cwmr/google-domains-ddns:$TAG-amd64
-      docker tag cwmr/google-domains-ddns:arm cwmr/google-domains-ddns:$TAG-arm
-      docker push cwmr/google-domains-ddns:$TAG-amd64
-      docker push cwmr/google-domains-ddns:$TAG-arm
-      ./manifest-tool push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:$TAG-ARCH --target cwmr/google-domains-ddns:$TAG
     fi
