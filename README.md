@@ -5,7 +5,9 @@ This is a simple Docker container for running the [Google Domains](http://domain
 
 It is heavily based on https://github.com/dragoncube/docker-google-domains-ddns, which is in turn based on David Coppit's work (https://github.com/coppit/docker-no-ip), since Google Domains DDN API is pretty much the same as No-IP's.
 
-The script runs every 5 minutes (configurable via the `INTERVAL` environment variable).
+By default, the script runs every 30 minutes, which can be overriden via the `INTERVAL` environment variable.
+
+Supports `amd64` and `arm`.
 
 Usage
 -----

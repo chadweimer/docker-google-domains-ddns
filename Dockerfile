@@ -1,14 +1,15 @@
-FROM phusion/baseimage:0.9.17
+ARG IMAGE=alpine:3.9
 
-MAINTAINER Kirill Uvaev <me@dragoncube.net>
+FROM $IMAGE
 
-VOLUME ["/config"]
+WORKDIR /root
 
 # Add dynamic dns script
-ADD google-domains-ddns.sh /root/google-domains-ddns/google-domains-ddns.sh
-RUN chmod +x /root/google-domains-ddns/google-domains-ddns.sh
+ADD google-domains-ddns.sh ./google-domains-ddns.sh
+RUN chmod +x ./google-domains-ddns.sh
 
-# Create template config file
-ADD google-domains-ddns.conf /root/google-domains-ddns/google-domains-ddns.conf
+RUN apk --no-cache update && \
+    apk --no-cache add curl moreurils ca-certificates && \
+    rm -rf /var/cache/apk/*
 
-CMD /root/google-domains-ddns/google-domains-ddns.sh
+CMD ./google-domains-ddns.sh

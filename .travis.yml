@@ -1,0 +1,29 @@
+sudo: required
+
+services:
+  - docker
+
+language: bash
+
+script:
+  # build amd64 image
+  - docker build -t cwmr/google-domains-ddns:amd64 .
+  # build armhf image
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - docker build --build-arg IMAGE=multiarch/alpine:armhf-v3.8 -t cwmr/google-domains-ddns:arm .
+  # push image
+  - wget -O manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64
+  - chmod +x ./manifest-tool
+  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+  - >
+    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      docker push cwmr/google-domains-ddns:amd64
+      docker push cwmr/google-domains-ddns:arm
+      ./manifest-tool push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:ARCH --target cwmr/google-domains-ddns:latest
+      TAG=$(grep "ENV AWS_CLI_VERSION" Dockerfile | awk 'NF>1{print $NF}')
+      docker tag cwmr/google-domains-ddns:amd64 cwmr/google-domains-ddns:$TAG-amd64
+      docker tag cwmr/google-domains-ddns:arm cwmr/google-domains-ddns:$TAG-arm
+      docker push cwmr/google-domains-ddns:$TAG-amd64
+      docker push cwmr/google-domains-ddns:$TAG-arm
+      ./manifest-tool push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:$TAG-ARCH --target cwmr/google-domains-ddns:$TAG
+    fi
