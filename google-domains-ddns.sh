@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "$HOSTNAME" ]; then
   echo "HOSTNAME must be defined"
