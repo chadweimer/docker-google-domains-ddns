@@ -12,6 +12,7 @@ script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build --build-arg IMAGE=multiarch/alpine:armhf-v3.9 -t cwmr/google-domains-ddns:arm .
   # push image
+  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
   - >
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
       docker push cwmr/google-domains-ddns:amd64
