@@ -12,12 +12,9 @@ script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build --build-arg IMAGE=multiarch/alpine:armhf-v3.9 -t cwmr/google-domains-ddns:arm .
   # push image
-  - wget -O manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64
-  - chmod +x ./manifest-tool
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
   - >
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
       docker push cwmr/google-domains-ddns:amd64
       docker push cwmr/google-domains-ddns:arm
-      ./manifest-tool push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:ARCH --target cwmr/google-domains-ddns:latest
+      docker run --rm mplatform/manifest-tool --username $DOCKER_USER --password $DOCKER_PASS push from-args --platforms linux/amd64,linux/arm --template cwmr/google-domains-ddns:ARCH --target cwmr/google-domains-ddns:latest
     fi
